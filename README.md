@@ -1,20 +1,27 @@
 # passgenr
 
-**THIS CODE IS UNDER CONSTRUCTION, IT SHOULD NOT BE RELIED ON TO GENERATE SECURE
-PASSWORDS YET.**
-
 [![Build Status](https://travis-ci.org/defuse/passgenr.svg?branch=master)](https://travis-ci.org/defuse/passgenr)
+[![crates.io](https://img.shields.io/crates/d/passgenr.svg)](https://crates.io/crates/passgenr)
+[![crates.io](https://img.shields.io/crates/v/passgenr.svg)](https://crates.io/crates/passgenr)
+[![docs.rs](https://docs.rs/passgenr/badge.svg)](https://docs.rs/passgenr/)
 
 `passgenr` is a Rust library for generating cryptographically-secure random
 passwords. It is a port of my earlier password generating tool,
 [passgen](https://github.com/defuse/passgen) (which was written in C).
-`passgenr` also includes a command-line utility for generating passwords.
+`passgenr` also includes a command-line utility for generating passwords. Please
+read the [Security Details](#security-details) section below.
 
-## Build Instructions
+## Command-Line Utility
 
-TODO
+To build and install the command-line utility, run...
 
-## Command-Line Utility Examples
+```
+cargo build --bin passgenr --release
+```
+
+...and then install the `./target/release/passgenr` into your system.
+
+Here are some examples of how to use the command-line tool:
 
 ```
 $ passgenr --ascii
@@ -35,35 +42,40 @@ bjqxtuknhlqacsiwjansyavkaqlnyscsnxwowcgymlkwxzlilxbzsyovyoqwjdmw
 $ passgenr --words
 vocalist.uptown.bunch.feel.board.crock.few.teeter.product.intellect
 
-$ passgen --hex -p 5
-753924DC422047A0D9FFDDEE87BCF6BA65D992EE317178D1C77BDE46DAC13C42
-1ABFFDA08CD24BBD34590D183EE25C610A6B9CCD9847081A786B0061EF312769
-2C065D5BD06412C6BE08C47F728D8AB9A099B5C42102517897426D9CF5420DCA
-239EDCE8E3788F8E86383411EBA7A3E819F8897C263327AA20503D563E59733B
-C2A980F8DFCC686F389B5CB96D30701C22D0B7B6BF2D732F7CD1364D81D949CC
+$ passgenr --hex -p 5
+0E21238E1B35FE6B38890AF83CBC1DD3470EE30F31971ECF49170CEE593D0312
+1057CA652A62EA045B58EF2FA31077CA8749936D4FA87931EE22E4CC36BFBA02
+2548942BB7A11D793225BD4E2B84E3FCBD66118F28C4C3871823745779340A30
+878C14A4BD2C9F7B76C09D0A1A308AD471F4E06B13DC96886CAEAB2446E33178
+1F0E1C337872EECE8FFC89A4088875CEB22BB5956B38D0C62FC28855202AB1F5
 ```
 
-## Library Examples
+## Library
 
-This crate is on [crates.io TODO actual link](TODO). To use it, add it to your
-dependencies in `Cargo.toml`...
+This library is [on crates.io](https://crates.io/crates/passgenr). The
+documentation is hosted [on docs.rs](https://docs.rs/passgenr/).
+
+To use the library, add the following to your `Cargo.toml`...
 
 ```
 [dependencies]
-passgenr = "0.1"
+passgenr = "0.2"
 ```
 
-...and add this to your crate root (`lib.rs` if you're writing a library, or
-`main.rs` if you're writing a binary):
+...and add this line to your crate root...
 
 ```
 extern crate passgenr;
 ```
 
-TODO example
+...now you can generate a password...
 
-TODO link to full docs
-
+```
+assert_eq!(
+    20,
+    passgenr::random_password(passgenr::charsets::ASCII, 20, "").unwrap().len()
+);
+```
 
 ## Security Details
 
